@@ -1104,15 +1104,30 @@ class AbletonMCP(ControlSurface):
             
             # Select the track
             self._song.view.selected_track = track
-            
+
+            devices_before = [d.name for d in tuple(track.devices)]
+
             # Load the item
             app.browser.load_item(item)
-            
+
+            devices_after = [d.name for d in tuple(track.devices)]
+            before_counts = {}
+            for name in devices_before:
+                before_counts[name] = before_counts.get(name, 0) + 1
+            new_devices = []
+            for name in devices_after:
+                if before_counts.get(name, 0) > 0:
+                    before_counts[name] -= 1
+                else:
+                    new_devices.append(name)
+
             result = {
                 "loaded": True,
                 "item_name": item.name,
                 "track_name": track.name,
-                "uri": item_uri
+                "uri": item_uri,
+                "devices_after": devices_after,
+                "new_devices": new_devices,
             }
             return result
         except Exception as e:
