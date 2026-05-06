@@ -1422,6 +1422,7 @@ def create_arrangement_midi_clip(
             "track_index": ti,
             "position": position,
             "length": length,
+            "name": name,
         })
 
         msg = (f"Created MIDI clip on track {track_index} at "
