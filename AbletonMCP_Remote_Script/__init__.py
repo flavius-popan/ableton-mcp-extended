@@ -7,6 +7,7 @@ import json
 import threading
 import time
 import traceback
+from collections import Counter
 
 # Change queue import for Python 2
 try:
@@ -1111,13 +1112,11 @@ class AbletonMCP(ControlSurface):
             app.browser.load_item(item)
 
             devices_after = [d.name for d in tuple(track.devices)]
-            before_counts = {}
-            for name in devices_before:
-                before_counts[name] = before_counts.get(name, 0) + 1
+            remaining = Counter(devices_before)
             new_devices = []
             for name in devices_after:
-                if before_counts.get(name, 0) > 0:
-                    before_counts[name] -= 1
+                if remaining[name] > 0:
+                    remaining[name] -= 1
                 else:
                     new_devices.append(name)
 
